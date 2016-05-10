@@ -1,0 +1,41 @@
+.favorite {
+    color: #F8BE23;
+}
+.notFavorite {
+    color: black;
+}
+.header {
+    width: 100%;
+    display: inline-block;
+}
+.dashboardTitle {
+    margin: 40pt;
+    font-weight: bolder;
+    color: #555FD1;
+    font-size: 40pt;
+    float: left;
+}
+
+#currentActivityHeader {
+    margin: 18pt;
+    font-weight: bolder;
+    color: #555FD1;
+    font-size: 40pt;
+}
+#backToFavoritesButton {
+    float: left;
+}
+#addToCalendarButton {
+    padding: 10pt;
+    font-size: 18pt;
+}
+#backToFavoritesButton {
+    color: #4241CA;
+    font-size: 16pt;
+    font-variant: none;
+}
+#daySelectorDiv {
+    font-size: 16pt;
+}
+
+

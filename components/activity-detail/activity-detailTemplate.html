@@ -1,0 +1,44 @@
+<md-button href="bedtime.html#/likedActivities" id="backToFavoritesButton">< All Liked Activities</md-button>
+
+<div class="header">
+<h1 class="md-display-2" id="currentActivityHeader" class="dashboardTitle">{{currentActivity.name}}!
+<md-button ng-class="isFavorite(currentActivity)" ng-click="main.toggleActivityLike(currentActivity)" id="activityDetailLike"><div class="material-icons">favorite</div></md-button>
+</h1>
+</div>
+
+<div ng-if="currentActivity.file_name !== '' ">
+<img src="images/{{currentActivity.file_name}}"></img>
+</div>
+
+<div ng-if="currentActivity.description !== '' ">
+    <div id="activityDescription">{{currentActivity.description}}
+        <a ng-if="currentActivity.link !== '' " href= {{currentActivity.link}}>here</a>
+    </div>
+</div>
+
+
+<div>
+    <md-button ng-click="showDaySelector = !showDaySelector" class="shortButtonStyle" id="addToCalendarButton">
+        + Add to Calendar
+    </md-button>
+    <div ng-if="showDaySelector" id="daySelectorDiv">
+    Select day to add to: 
+    <br>
+        <md-button aria-label="ok" ng-repeat="day in daysOfWeek track by $index" ng-click="swapOutCurrentEvent($index)">
+        {{day}}
+        </md-button>
+    </div>
+</div>
+
+
+<!-- <div ng-if="!main.timerStarted">
+    <md-button ng-click="startTimer()" class="shortButtonStyle">
+        Start activity now
+    </md-button>
+</div>
+<div ng-if="main.timerStarted" id="timerDiv">
+    <div id="timerContent">
+        <h2 class="md-display-1" id="timeLeftLabel">{{timeLeftLabel}} left before bedtime!</h2>
+        <md-button class="md-raised" href="bedtime.html#/activityFeedback/{{currentActivity.id}}" id="endActivityButton">Goodnight</md-button>
+    </div>
+</div> -->

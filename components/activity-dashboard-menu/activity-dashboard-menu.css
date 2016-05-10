@@ -1,0 +1,21 @@
+#weeklyActivityList {
+    text-align: left;
+    margin: 0pt;
+}
+.newActivity {
+    color: #92CDCF;
+    font-size: 18pt;
+    /*float: right;*/
+}
+/*.dailyActivityThumbnail {
+    font-size: 10pt;
+}*/
+/*.activityName {
+    text-align: left;
+    vertical-align: bottom;
+    margin: 0pt;
+    width: ;
+}*/
+h3.ng-binding {
+    margin: 0pt;
+}

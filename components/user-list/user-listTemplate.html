@@ -1,0 +1,13 @@
+<div ng-repeat="user in users"> 
+    <md-button href="photo-share.html#/users/{{user.id}}">
+        {{user.first_name}} {{user.last_name}} 
+    </md-button>
+    <span ng-if="main.advancedOptions">
+        <span class="commentCount">
+            <a href="photo-share.html#/userCommentPhotos/{{user.id}}">{{user.commentsCount}}</a>
+        </span>
+        <span class="photosCount">
+            {{user.photosCount}}
+        </span>
+    </span>
+</div>

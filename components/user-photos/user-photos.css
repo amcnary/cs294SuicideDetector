@@ -1,0 +1,27 @@
+img {
+    max-width: 98%;
+    margin: 5pt;
+    /*display: block;*/
+}
+a {
+    text-decoration: none;
+}
+.photo {
+    margin: 20pt 10pt;
+    border: 3px solid black;
+    border-radius: 3pt;
+    position: relative;
+    display: inline-block;
+}
+.comment {
+    margin: 10pt;
+    max-width: 75%;
+    min-width: 200px;
+}
+.timeStamp {
+    color: #838383;
+    margin-left: 10pt;
+}
+#photoListDiv {
+    margin: 20pt;
+}

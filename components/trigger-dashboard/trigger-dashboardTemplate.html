@@ -1,0 +1,83 @@
+<!-- <div id="triggerOverlayWindow" ng-if="showingtrigger">
+    <div id="triggerFrame">
+        <ng-include src="'components/trigger-detail/trigger-detailTemplate.html'">
+        </ng-include>
+        <br>
+        <md-button ng-click="hidetrigger()">Back to Week</md-button>
+    </div>
+</div>
+ -->
+<!-- <div id="filterOpenButton">
+ <md-button ng-click="main.toggleFilter()" class="material-icons" ng-if="!main.filterOpen">keyboard_arrow_right</md-button>
+ <md-button ng-click="main.toggleFilter()" class="material-icons" ng-if="main.filterOpen">keyboard_arrow_left</md-button>
+ </div>
+ -->
+
+<div ng-show="exportingPDF" id="exporting">
+    <img id="pdf" src="images/samplePdf.png"></img>
+    <br>
+    <md-button class="md-raised" ng-click="exportingPDF = !exportingPDF">Back</md-button>
+</div>
+
+
+<div id="dashboardSubheader">
+<span><h1 class="md-display-3 dashboardTitle">Weekly Dashboard</h1></span>
+<span flex></span>
+</div>
+
+ <div class="table">
+ <table id="eventCalendar">
+    <tr id="weekdayRow">
+        <td class="weekdayLabel"> Sunday </td>
+        <td class="weekdayLabel"> Monday </td>
+        <td class="weekdayLabel"> Tuesday </td>
+        <td class="weekdayLabel"> Wednesday </td>
+        <td class="weekdayLabel"> Thursday </td>
+        <td class="weekdayLabel"> Friday </td>
+        <td class="weekdayLabel"> Saturday </td>
+    </tr>
+     <tr id="triggerNameRow">
+        <td ng-repeat="trigger in main.weeklytriggers track by $index"> 
+            <div class="triggerNameContainer" ng-click="main.goTotrigger($index)"><h3>{{trigger.name}}</h3></div>
+        </td>
+    </tr>
+    
+    <tr id="triggerImageRow">
+        <td ng-repeat="trigger in main.weeklytriggers track by $index" class="triggerImgContainer" ng-mouseenter="showtriggerDetails[$index]=true" ng-mouseleave="showtriggerDetails[$index]=false" id="td{{$index}}"> 
+            <div ng-click="main.goTotrigger($index)">
+                <img src="images/{{trigger.file_name}}" class="triggerImg" ng-hide="showtriggerDetails[$index]"></img>
+                <div ng-show="showtriggerDetails[$index]" class="triggerDescription">
+                    <b>Number of People:</b> 2-4
+                    <br>
+                    <b>Time:</b> 10-{{trigger.duration}} minutes
+                    <p>
+                    {{trigger.description}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    
+    <tr class="triggerActionsRow">
+        <td ng-repeat="trigger in main.weeklytriggers track by $index" class="triggerActionsContainer"> 
+            <div class="arrowsLeftRight">
+            <md-button class="material-icons shortButtonInvertedStyle refreshtriggerButton" ng-click="lastEvent($index)" ng-disabled="pasttriggersStack[$index].length === 0">keyboard_arrow_left</md-button>
+            <md-button class="material-icons shortButtonInvertedStyle refreshtriggerButton" ng-click="newRandomEvent($index)">keyboard_arrow_right</md-button>
+        </td>
+    </tr>
+    <tr class="triggerActionsRow">
+        <td ng-repeat="trigger in main.weeklytriggers track by $index" class="triggerActionsContainer"> 
+            <md-button class="shortButtonStyle starttriggerButton" ng-click="main.goTotrigger($index)">View</md-button>
+        </td>
+    </tr>
+
+</table>
+
+
+
+<div id="actionButtons">
+    <md-button class="buttonStyle" ng-click="exportingPDF = true">Export as PDF</md-button>
+    <md-button class="buttonStyle" ng-click="main.resettriggers()">Reset All</md-button>
+    <md-button class="buttonStyle" ng-click="exportToICal()">Export to iCal</md-button>
+</div>
+
+ </div>

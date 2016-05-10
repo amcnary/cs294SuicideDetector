@@ -1,0 +1,182 @@
+img.activityImg {
+    top:50%;
+    left:50%;
+    width:96%;
+    margin: 2pt;
+    -webkit-filter: contrast(160%);
+}
+td.activityImgContainer {
+    width: 14%;
+    min-width: 120pt;
+    height: 120pt;
+}
+table {
+    width: 98%;
+    border-collapse: collapse;
+    border-bottom: 3pt solid black;
+    color: white;
+}
+td {
+    border-left: 3pt solid black;
+    border-right: 3pt solid black;
+}
+#exporting {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 100;
+    background-image: url("images/samplePdf.pdf");
+}
+
+#pdf {
+    max-width: 100%;
+    max-height: 100%;
+    height: 500pt;
+    width: auto;
+}
+.dashboardTitle {
+    margin: 40pt;
+    font-weight: bolder;
+    color: #555FD1;
+    font-size: 40pt;
+    float: left;
+}
+#dashboardSubheader {
+    width: 100%;
+}
+#eventCalendar {
+    width: 100%;
+    min-width: 840pt;
+    height: 20pt;
+}
+#weekdayRow {
+    margin-bottom: 20pt;
+    border: 3pt solid black;
+    background-color: #4AC2BB;
+}
+.weekdayLabel {
+    font-size: 18pt;
+    font-weight: bold;
+    padding: 10pt 5pt;
+}
+
+#activityImageRow {
+    height: 120pt;
+    vertical-align: top;
+}
+.activityImgContainer {
+  width:100%;
+}
+.activityNameRow {
+    height: 24pt;
+}
+.activityNameContainer {
+    color: #4241CA;
+    font-size: 14pt;
+    font-weight: medium;
+}
+
+.activityActionsContainer {
+    vertical-align: center;
+}
+.refreshActivityButton {
+    width: 45%;
+    margin: 0pt;
+}
+.startActivityButton {
+    width: 45%;
+    margin: 0pt;
+}
+
+.activityDescription {
+    text-align: left;
+    border-radius: 0pt;
+    height: 110pt;
+    overflow-y: scroll;
+    color: black;
+}
+
+
+.activityActionsRow {
+    height: 50pt;
+}
+
+
+#activityFrame {
+    position: relative;
+    width: 80%;
+    text-align: center;
+    top: 20%;
+    left: 10%;
+    border: 2pt solid white;
+    z-index: 4;
+}
+#activityOverlayWindow {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: black;
+    z-index: 3;
+    overflow-x: hidden;
+    transition: .5s;
+    margin: 0pt;
+    color: white;
+    border-radius: 0pt;
+}
+#actionButtons {
+    font-size: 40pt;
+    margin-top: 40pt;
+}
+.buttonStyle {
+    background: #F9C740;
+    color: white;
+    border-radius: 8pt;
+    padding: 8pt;
+    font-size: 18pt;
+    box-shadow: 3px 3pt 5pt #AE8617;
+}
+.shortButtonStyle {
+    background: #4AC2BB;
+    color: white;
+    border-radius: 5pt;
+    padding: 3pt;
+    font-size: 14pt;
+    box-shadow: 1px 1pt 3pt #358C88;
+}
+.shortButtonInvertedStyle {
+    color: #4AC2BB;
+    font-size: 30pt;
+    text-decoration: bold;
+}
+
+
+/*
+#endActivityButton {
+    font-size: 18pt;
+    text-transform: capitalize;
+    margin: 20pt;
+    max-width: 400pt;
+}
+#filterOpenButton {
+    float: left;
+    margin: 0pt;
+}
+#timerDiv {
+    position: absolute;
+    z-index: 10;
+    top: 10%;
+    left: 10%;
+    width: 70%;
+    height: 70%;
+    background-color: #EEEFF7;
+    border: 2pt solid #1C1D21;
+    vertical-align: center;
+}
+#timerContent {
+    width: 60%;
+    height: 50%;
+    margin: 20% 25%;
+}*/

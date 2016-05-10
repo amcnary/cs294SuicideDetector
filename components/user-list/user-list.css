@@ -1,0 +1,18 @@
+.photosCount {
+    color: #007B07;
+    border: 1px solid #005C02;
+    border-radius: 3pt;
+    background: #CAFFD5;
+    padding: 2pt;
+    margin: 5pt 10pt 3pt 10pt;
+    float: right;
+}
+.commentCount {
+    color: #A90100;
+    border: 1px solid #740100;
+    border-radius: 3pt;
+    background: #FFC3C4;
+    padding: 2pt;
+    margin: 5pt 3pt 3pt 10pt;
+    float: right;
+}

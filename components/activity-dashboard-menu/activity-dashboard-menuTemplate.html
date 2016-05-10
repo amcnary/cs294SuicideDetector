@@ -1,0 +1,17 @@
+<h3>
+Activity Details
+</h3>
+<div id="weeklyActivityList" class="row">
+    <div ng-repeat="curActivity in main.weeklyActivities track by $index" class="activityName">
+        <md-button class="dailyActivityThumbnail">
+            <a href="bedtime.html#/activity/{{curActivity.id}}">
+            <h3>{{weekdays[$index]}}: {{curActivity.name}}</h3>
+            </a>
+        </md-button>
+        <span flex></span>
+        <span class="material-icons newActivity" ng-click="main.newActivity($index)">refresh</span>
+    </div>
+</div>
+
+
+<md-button ng-click="main.resetWeekActivities()">Reset All</md-button>

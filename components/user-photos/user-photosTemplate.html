@@ -1,0 +1,20 @@
+<div id="photoListDiv">
+    <h1>{{currentUser.first_name}} {{currentUser.last_name}}'s Photos</h1>
+
+    <div ng-repeat="photo in currentUserPhotos" class="photo"> 
+        <a href="photo-share.html#/userPhoto/{{photo.file_name}}">
+        <img ng-src="/images/{{photo.file_name}}" alt=""></img>
+        </a>
+        <br>
+            <span class="timeStamp">Posted on {{photo.date_time}}</span>
+        </br>
+        <div ng-repeat="comment in photo.comments" class="comment">
+            <br>
+                <a href="photo-share.html#/users/{{comment.user.id}}"> 
+                    {{comment.user.first_name}} {{comment.user.last_name}}:
+                </a> 
+                {{comment.comment}} <span class=timeStamp>({{comment.date_time}})</span>
+            </br>
+        </div>
+    </div>
+</div>
