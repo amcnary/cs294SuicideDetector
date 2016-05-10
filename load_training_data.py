@@ -15,12 +15,12 @@ def load_csv_sentences(filename):
 
 
 # def filter_negative_phrases(phrases):
+    # phrases_to_keep = {}
     # for phrase in phrases:
     #     try:
     #         req = urllib2.Request('http://text-processing.com/api/sentiment/', 'text=' + str(phrase))
     #         response = urllib2.urlopen(req)
     #         result = eval(response.read())
-    #         phrases_to_keep = {}
     #         if result['probability']['pos'] > .55:
     #             print phrase, ': not negative. dropping'
     #         elif result['probability']['neg'] > .5:

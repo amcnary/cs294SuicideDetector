@@ -11,6 +11,41 @@ import pdb
  
 def word_feats(words):
     return dict([(word, True) for word in words])
+
+def filter_negative_phrases(phrases):
+    for phrase in phrases:
+        try:
+            req = urllib2.Request('https://japerk-text-processing.p.mashape.com/sentiment/', 'text=' + str(phrase))
+            req.add_header('X-Mashape-Key', 'aUisSbUwWqmshbye6c1UpIe9qxtep1LIHSjjsnI81LIi9gZmKR')
+            response = urllib2.urlopen(req)
+            result = eval(response.read())
+            phrases_to_keep = {}
+            if result['probability']['pos'] > .55:
+                print phrase, ': not negative. dropping'
+            elif result['probability']['neg'] > .5:
+                # print phrase, ': negative! keeping (score: ' + str(result['probability']['neg'] - result['probability']['pos']) + ')'
+                phrases_to_keep[phrase] = result['probability']['neg'] - result['probability']['pos']
+            # pdb.set_trace()
+        except Exception, e:
+            print e
+    return phrases_to_keep
+
+def filter_positive_phrases(phrases):
+    phrases_to_keep = {}
+    for phrase in phrases:
+        try:
+            req = urllib2.Request('https://japerk-text-processing.p.mashape.com/sentiment/', 'text=' + str(phrase))
+            req.add_header('X-Mashape-Key', 'aUisSbUwWqmshbye6c1UpIe9qxtep1LIHSjjsnI81LIi9gZmKR')
+            response = urllib2.urlopen(req)
+            result = eval(response.read())
+            if result['probability']['pos'] > .55:
+                phrases_to_keep[phrase] = result['probability']['neg'] - result['probability']['pos']
+            elif result['probability']['neg'] < .5:
+                phrases_to_keep[phrase] = result['probability']['neg'] - result['probability']['pos']
+            # pdb.set_trace()
+        except Exception, e:
+            print e
+    return phrases_to_keep
  
 def load_csv_sentences(filename):
     df = pd.read_csv(filename)
@@ -22,8 +57,21 @@ def load_csv_sentences(filename):
     return phrases
 
 def main():
-    neg_phrases = load_csv_sentences('thoughtsandfeelings.csv')
-    pos_phrases = load_csv_sentences('spiritualforums.csv')
+    # neg_phrases = filter_negative_phrases(load_csv_sentences('thoughtsandfeelings.csv'))
+    # pos_phrases = filter_positive_phrases(load_csv_sentences('spiritualforums.csv'))
+    # file_pos = open("pos_phrases.txt", 'w')
+    # file_neg = open("neg_phrases.txt", 'w')
+
+    # for item in pos_phrases:
+    #     print>>file_pos, item
+    # for item in neg_phrases:
+    #     print>>file_neg, item
+
+    neg_file = open("neg_phrases.txt", "r")
+    pos_file = open("pos_phrases.txt", "r")
+    neg_phrases = neg_file.readlines()
+    pos_phrases = pos_file.readlines()
+
     neg_docs = []
     pos_docs = []
     for phrase in neg_phrases:
@@ -31,6 +79,8 @@ def main():
     for phrase in pos_phrases:
         pos_docs.append((phrase.split(), 'alright'))
 
+    print len(neg_docs)
+    print len(pos_docs)
     negcutoff = len(neg_docs)*3/4
     poscutoff = len(pos_docs)*3/4
 

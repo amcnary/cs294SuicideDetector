@@ -22,8 +22,13 @@ def load_csv_sentences(filename):
 
 
 def main():
-    neg_phrases = load_csv_sentences('thoughtsandfeelings.csv')
-    pos_phrases = load_csv_sentences('spiritualforums.csv')
+    # neg_phrases = filter_negative_phrases(load_csv_sentences('thoughtsandfeelings.csv'))
+    # pos_phrases = filter_positive_phrases(load_csv_sentences('spiritualforums.csv'))
+    neg_file = open("neg_phrases.txt", "r")
+    pos_file = open("pos_phrases.txt", "r")
+    neg_phrases = neg_file.readlines()
+    pos_phrases = pos_file.readlines()
+
     neg_phrases_tagged = []
     pos_phrases_tagged = []
     for phrase in neg_phrases:
