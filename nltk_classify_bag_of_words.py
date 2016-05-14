@@ -52,7 +52,12 @@ class SuicideClassifier(object):
 
 
 def main():
-    return SuicideClassifier()
+    classifier = SuicideClassifier()
+    test_string = ''
+    print 'Welcome!'
+    while str(test_string) not in ('q', 'quit', 'exit'):
+        test_string = raw_input('Enter phrase to test: ')
+        print(classifier.test(str(test_string)))
 
 
 if __name__ == '__main()__':
