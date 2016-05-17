@@ -103,9 +103,9 @@ class SuicideClassifier(object):
             print('{0}: {1}'.format(key, value))
 
     def test(self, phrase):
-        all_words = self.sentim_analyzer.all_words(phrase)
+        all_words = self.sentim_analyzer.all_words([phrase.split()])
         unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words)
-        return self.classifier.classify(unigram_feats)
+        return self.sentim_analyzer.classify(unigram_feats)
 
 def main():
     classifier = SuicideClassifier()
