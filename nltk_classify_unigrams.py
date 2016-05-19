@@ -5,6 +5,8 @@ from nltk.sentiment.util import *
 import pandas as pd
 import urllib2
 import pdb
+import datetime
+from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
 
 
 def filter_negative_phrases(phrases):
@@ -18,12 +20,14 @@ def filter_negative_phrases(phrases):
             if result['probability']['pos'] > .55:
                 print phrase, ': not negative. dropping'
             elif result['probability']['neg'] > .5:
-                # print phrase, ': negative! keeping (score: ' + str(result['probability']['neg'] - result['probability']['pos']) + ')'
+                # print phrase, ': negative! keeping (score: ' +
+                # str(result['probability']['neg'] - result['probability']['pos']) + ')'
                 phrases_to_keep[phrase] = result['probability']['neg'] - result['probability']['pos']
             # pdb.set_trace()
         except Exception, e:
             print e
     return phrases_to_keep
+
 
 def filter_positive_phrases(phrases):
     phrases_to_keep = {}
@@ -41,7 +45,8 @@ def filter_positive_phrases(phrases):
         except Exception, e:
             print e
     return phrases_to_keep
- 
+
+
 def load_csv_sentences(filename):
     df = pd.read_csv(filename)
     df = df.text
@@ -51,8 +56,10 @@ def load_csv_sentences(filename):
     phrases = [x.lower() for x in phrases if len(x) > 3 and len(x) < 200]
     return phrases
 
+
 class SuicideClassifier(object):
-    def __init__(self):
+
+    def __init__(self, num_phrases_to_track=20):
         # neg_phrases = filter_negative_phrases(load_csv_sentences('thoughtsandfeelings.csv'))
         # pos_phrases = filter_positive_phrases(load_csv_sentences('spiritualforums.csv'))
         # file_pos = open("pos_phrases.txt", 'w')
@@ -62,6 +69,7 @@ class SuicideClassifier(object):
         #     print>>file_pos, item
         # for item in neg_phrases:
         #     print>>file_neg, item
+        self.recent_sentiment_scores = []
 
         neg_file = open("neg_phrases.txt", "r")
         pos_file = open("pos_phrases.txt", "r")
@@ -77,8 +85,8 @@ class SuicideClassifier(object):
 
         print len(neg_docs)
         print len(pos_docs)
-        negcutoff = len(neg_docs)*3/4
-        poscutoff = len(pos_docs)*3/4
+        negcutoff = len(neg_docs) * 3 / 4
+        poscutoff = len(pos_docs) * 3 / 4
 
         train_pos_docs = pos_docs[:poscutoff]
         test_pos_docs = pos_docs[poscutoff:]
@@ -99,7 +107,7 @@ class SuicideClassifier(object):
         test_set = self.sentim_analyzer.apply_features(testing_docs)
         trainer = NaiveBayesClassifier.train
         self.classifier = self.sentim_analyzer.train(trainer, training_set)
-        for key,value in sorted(self.sentim_analyzer.evaluate(test_set).items()):
+        for key, value in sorted(self.sentim_analyzer.evaluate(test_set).items()):
             print('{0}: {1}'.format(key, value))
 
     def test(self, phrase):
@@ -107,13 +115,31 @@ class SuicideClassifier(object):
         unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words)
         return self.sentim_analyzer.classify(unigram_feats)
 
+    def update_sentiments(self, value):
+        now = datetime.datetime.now()
+        self.recent_sentiment_scores.append([now, value])
+        self.recent_sentiment_scores = [x for x in self.recent_sentiment_scores if x[
+            0] > now - datetime.timedelta(seconds=60)]
+        print sum([x[1] for x in self.recent_sentiment_scores]) / len(self.recent_sentiment_scores)
+        return sum([x[1] for x in self.recent_sentiment_scores]) / len(self.recent_sentiment_scores)
+
+
 def main():
     classifier = SuicideClassifier()
     test_string = ''
     print 'Welcome!'
     while str(test_string) not in ('q', 'quit', 'exit'):
         test_string = raw_input('Enter phrase to test: ')
-        print(classifier.test(str(test_string)))
+        our_classifier_results = classifier.test(str(test_string))
+        vader_sent = vaderSentiment(str(test_string))
+        print('Our classifier says: ' + our_classifier_results)
+        print 'Vader says: ' + str(vader_sent)
+        if classifier.update_sentiments(vader_sent['compound']) < -.3:
+            if our_classifier_results == 'suicidal':
+                print 'Please consider calling a hotline... I\'m worried about you...'
+            else:
+                print 'Hey, we can talk if you want to...'
+        print '\n'
 
 if __name__ == '__main()__':
     main()
