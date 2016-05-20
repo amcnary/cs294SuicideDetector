@@ -57,6 +57,24 @@ def load_csv_sentences(filename):
     return phrases
 
 
+def write_csv_files_with_vader():
+    for filename in ["neg_phrases_filtered.txt",
+                     "pos_phrases_filtered.txt",
+                     "neg_phrases.txt",
+                     "pos_phrases.txt"]:
+        new_filename = 'vader_' + filename
+        with open(filename, "r") as file:
+            phrases = file.readlines()
+            with open(new_filename, 'w') as new_file:
+                for phrase in phrases:
+                    vader_sent = vaderSentiment(str(phrase))
+                    new_file.write(phrase[:-1] + ',' \
+                                   + str(vader_sent['neg']) + ',' \
+                                   + str(vader_sent['neu']) + ',' \
+                                   + str(vader_sent['pos']) + ',' \
+                                   + str(vader_sent['compound']) + '\n')
+
+
 class SuicideClassifier(object):
 
     def __init__(self, num_phrases_to_track=20):
@@ -71,8 +89,8 @@ class SuicideClassifier(object):
         #     print>>file_neg, item
         self.recent_sentiment_scores = []
 
-        neg_file = open("neg_phrases.txt", "r")
-        pos_file = open("pos_phrases.txt", "r")
+        neg_file = open("neg_phrases_filtered.txt", "r")
+        pos_file = open("pos_phrases_filtered.txt", "r")
         neg_phrases = neg_file.readlines()
         pos_phrases = pos_file.readlines()
 
@@ -100,8 +118,8 @@ class SuicideClassifier(object):
         unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words, min_freq=2)
         self.sentim_analyzer.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats)
 
-        # bigram_feats = sentim_analyzer.bigram_collocation_feats(all_words, min_freq=4)
-        # sentim_analyzer.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
+        bigram_feats = self.sentim_analyzer.bigram_collocation_feats(all_words, min_freq=4)
+        self.sentim_analyzer.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
 
         training_set = self.sentim_analyzer.apply_features(training_docs)
         test_set = self.sentim_analyzer.apply_features(testing_docs)
