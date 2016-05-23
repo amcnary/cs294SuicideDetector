@@ -75,6 +75,26 @@ def write_csv_files_with_vader():
                                    + str(vader_sent['compound']) + '\n')
 
 
+def vader_sentiment_feat(document):
+    vader_sent = vaderSentiment(str(' '.join(document)))
+    vader_neg = vader_sent['neg']
+    vader_neu = vader_sent['neu']
+    vader_pos = vader_sent['pos']
+    return {'vaderNeuOver.2': (vader_neu > .2), 'vaderNeuOver.5': (vader_neu > .5), 'vaderNeuOver.8': (vader_neu > .8),
+            'vaderNegOver.2': (vader_neg > .2), 'vaderNegOver.5': (vader_neg > .5), 'vaderNegOver.8': (vader_neg > .8),
+            'vaderPosOver.2': (vader_pos > .2), 'vaderPosOver.5': (vader_pos > .5), 'vaderPosOver.8': (vader_pos > .8)}
+    # return {'vaderNeuOver.2': (vader_neu >= .2 and vader_neu < .5), 'vaderNeuOver.5': (vader_neu >= .5 and vader_neu < .8), 'vaderNeuOver.8': (vader_neu >= .8),
+    #         'vaderNegOver.2': (vader_neg >= .2 and vader_neg < .5), 'vaderNegOver.5': (vader_neg >= .5 and vader_neg < .8), 'vaderNegOver.8': (vader_neg >= .8),
+    #         'vaderPosOver.2': (vader_pos >= .2 and vader_pos < .5), 'vaderPosOver.5': (vader_pos >= .5 and vader_pos < .8), 'vaderPosOver.8': (vader_pos >= .8)}
+    # return {'vaderNegScore': vader_neg, 'vaderNeuScore': vader_neu, 'vaderPosScore': vader_pos}
+    # return {'vaderNeu': round(vader_neu * 10), 'vaderNeg': round(vader_neg * 10), 'vaderPos': round(vader_pos * 10)}
+
+# def keyword_feat(document):
+#     feats = {}
+#     if 'death' in document:
+#         feats['containsDeath'] = True
+
+
 class SuicideClassifier(object):
 
     def __init__(self, num_phrases_to_track=20):
@@ -118,8 +138,10 @@ class SuicideClassifier(object):
         unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words, min_freq=2)
         self.sentim_analyzer.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats)
 
-        bigram_feats = self.sentim_analyzer.bigram_collocation_feats(all_words, min_freq=4)
-        self.sentim_analyzer.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
+        self.sentim_analyzer.add_feat_extractor(vader_sentiment_feat)
+
+        # bigram_feats = self.sentim_analyzer.bigram_collocation_feats(all_words, min_freq=1)
+        # self.sentim_analyzer.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
 
         training_set = self.sentim_analyzer.apply_features(training_docs)
         test_set = self.sentim_analyzer.apply_features(testing_docs)
@@ -127,11 +149,10 @@ class SuicideClassifier(object):
         self.classifier = self.sentim_analyzer.train(trainer, training_set)
         for key, value in sorted(self.sentim_analyzer.evaluate(test_set).items()):
             print('{0}: {1}'.format(key, value))
+        self.classifier.show_most_informative_features(20)
 
     def test(self, phrase):
-        all_words = self.sentim_analyzer.all_words([phrase.split()])
-        unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words)
-        return self.sentim_analyzer.classify(unigram_feats)
+        return self.sentim_analyzer.classify(phrase.split())
 
     def update_sentiments(self, value):
         now = datetime.datetime.now()
