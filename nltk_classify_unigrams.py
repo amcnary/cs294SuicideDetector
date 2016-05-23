@@ -75,6 +75,23 @@ def write_csv_files_with_vader():
                                    + str(vader_sent['compound']) + '\n')
 
 
+def write_webtext_csv():
+    from nltk.corpus import webtext
+    file_reader = webtext.open('overheard.txt')
+    with open('webtext_phrases.csv', 'w') as file:
+        for line in file_reader:
+            if ':' in line:
+                try:
+                    line = str(line.lower())
+                    line = line[line.index(':') + 2:]
+                    phrases = line.replace(',', '.').replace('?', '.').replace('!', '.').replace('\n', '.').split('.')
+                    for phrase in phrases:
+                        if len(phrase) > 3 and len(phrase) < 200:
+                            file.write(phrase + '\n')
+                except Exception:
+                    pass
+    # phrases.to_csv('webtext_phrases.csv')
+
 class SuicideClassifier(object):
 
     def __init__(self, num_phrases_to_track=20):
