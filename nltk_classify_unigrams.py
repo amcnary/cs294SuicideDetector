@@ -103,24 +103,19 @@ def vader_sentiment_feat(document):
     vader_neg = vader_sent['neg']
     vader_neu = vader_sent['neu']
     vader_pos = vader_sent['pos']
-    return {'vaderNeuOver.2': (vader_neu > .2), 'vaderNeuOver.5': (vader_neu > .5), 'vaderNeuOver.8': (vader_neu > .8),
-            'vaderNegOver.2': (vader_neg > .2), 'vaderNegOver.5': (vader_neg > .5), 'vaderNegOver.8': (vader_neg > .8),
-            'vaderPosOver.2': (vader_pos > .2), 'vaderPosOver.5': (vader_pos > .5), 'vaderPosOver.8': (vader_pos > .8)}
+    # return {'vaderNeuOver.2': (vader_neu > .2), 'vaderNeuOver.5': (vader_neu > .5), 'vaderNeuOver.8': (vader_neu > .8),
+    #         'vaderNegOver.2': (vader_neg > .2), 'vaderNegOver.5': (vader_neg > .5), 'vaderNegOver.8': (vader_neg > .8),
+    #         'vaderPosOver.2': (vader_pos > .2), 'vaderPosOver.5': (vader_pos > .5), 'vaderPosOver.8': (vader_pos > .8)}
     # return {'vaderNeuOver.2': (vader_neu >= .2 and vader_neu < .5), 'vaderNeuOver.5': (vader_neu >= .5 and vader_neu < .8), 'vaderNeuOver.8': (vader_neu >= .8),
     #         'vaderNegOver.2': (vader_neg >= .2 and vader_neg < .5), 'vaderNegOver.5': (vader_neg >= .5 and vader_neg < .8), 'vaderNegOver.8': (vader_neg >= .8),
     #         'vaderPosOver.2': (vader_pos >= .2 and vader_pos < .5), 'vaderPosOver.5': (vader_pos >= .5 and vader_pos < .8), 'vaderPosOver.8': (vader_pos >= .8)}
     # return {'vaderNegScore': vader_neg, 'vaderNeuScore': vader_neu, 'vaderPosScore': vader_pos}
-    # return {'vaderNeu': round(vader_neu * 10), 'vaderNeg': round(vader_neg * 10), 'vaderPos': round(vader_pos * 10)}
-
-# def keyword_feat(document):
-#     feats = {}
-#     if 'death' in document:
-#         feats['containsDeath'] = True
+    return {'vaderNeu': round(vader_neu * 10), 'vaderNeg': round(vader_neg * 10), 'vaderPos': round(vader_pos * 10)}
 
 
 class SuicideClassifier(object):
 
-    def __init__(self, num_phrases_to_track=20):
+    def __init__(self, sentiment_only, num_phrases_to_track=20):
         # neg_phrases = filter_negative_phrases(load_csv_sentences('thoughtsandfeelings.csv'))
         # pos_phrases = filter_positive_phrases(load_csv_sentences('spiritualforums.csv'))
         # file_pos = open("pos_phrases.txt", 'w')
@@ -159,9 +154,11 @@ class SuicideClassifier(object):
         testing_docs = test_pos_docs + test_neg_docs
 
         self.sentim_analyzer = SentimentAnalyzer()
-        all_words = self.sentim_analyzer.all_words([doc for doc in training_docs])
-        unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words, min_freq=2)
-        self.sentim_analyzer.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats)
+
+        if not sentiment_only:
+            all_words = self.sentim_analyzer.all_words([doc for doc in training_docs])
+            unigram_feats = self.sentim_analyzer.unigram_word_feats(all_words, min_freq=1)
+            self.sentim_analyzer.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats)
 
         self.sentim_analyzer.add_feat_extractor(vader_sentiment_feat)
 
@@ -189,20 +186,24 @@ class SuicideClassifier(object):
 
 
 def main():
-    classifier = SuicideClassifier()
+    classifier = SuicideClassifier(False)
+    classifier_sentiment = SuicideClassifier(True)
     test_string = ''
     print 'Welcome!'
     while str(test_string) not in ('q', 'quit', 'exit'):
         test_string = raw_input('Enter phrase to test: ')
         our_classifier_results = classifier.test(str(test_string))
-        vader_sent = vaderSentiment(str(test_string))
+        sentiment_classifier_results = classifier_sentiment.test(str(test_string))
         print('Our classifier says: ' + our_classifier_results)
-        print 'Vader says: ' + str(vader_sent)
-        if classifier.update_sentiments(vader_sent['compound']) < -.3:
-            if our_classifier_results == 'suicidal':
-                print 'Please consider calling a hotline... I\'m worried about you...'
-            else:
-                print 'Hey, we can talk if you want to...'
+        print('Sentiment-only classifier says: ' + sentiment_classifier_results)
+        # vader_sent = vaderSentiment(str(test_string))
+        # print('Our classifier says: ' + our_classifier_results)
+        # print 'Vader says: ' + str(vader_sent)
+        # if classifier.update_sentiments(vader_sent['compound']) < -.3:
+        #     if our_classifier_results == 'suicidal':
+        #         print 'Please consider calling a hotline... I\'m worried about you...'
+        #     else:
+        #         print 'Hey, we can talk if you want to...'
         print '\n'
 
 if __name__ == '__main()__':
