@@ -10,13 +10,13 @@ from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
 
 
 def filter_negative_phrases(phrases):
+    phrases_to_keep = {}
     for phrase in phrases:
         try:
             req = urllib2.Request('https://japerk-text-processing.p.mashape.com/sentiment/', 'text=' + str(phrase))
             req.add_header('X-Mashape-Key', 'aUisSbUwWqmshbye6c1UpIe9qxtep1LIHSjjsnI81LIi9gZmKR')
             response = urllib2.urlopen(req)
             result = eval(response.read())
-            phrases_to_keep = {}
             if result['probability']['pos'] > .55:
                 print phrase, ': not negative. dropping'
             elif result['probability']['neg'] > .5:
@@ -121,7 +121,7 @@ class SuicideClassifier(object):
         #     print>>file_neg, item
         self.recent_sentiment_scores = []
 
-        neg_file = open("neg_phrases_filtered.txt", "r")
+        neg_file = open("ALL_neg_phrases_filtered.txt", "r")
         pos_file = open("webtext_phrases_with_lots_of_words.txt", "r")
         neg_phrases = neg_file.readlines()
         pos_phrases = pos_file.readlines()
