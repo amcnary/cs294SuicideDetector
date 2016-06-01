@@ -78,6 +78,7 @@ def write_csv_files_with_vader():
 def write_webtext_csv():
     from nltk.corpus import webtext
     file_reader = webtext.open('overheard.txt')
+    phrases_to_track = []
     with open('webtext_phrases_with_lots_of_words.txt', 'w') as file:
         for line in file_reader:
             if ':' in line:
@@ -88,8 +89,13 @@ def write_webtext_csv():
                     for phrase in phrases:
                         if len(phrase.split(' ')) > 3 and len(phrase) < 200:
                             file.write(phrase + '\n')
+                            phrases_to_track.append(phrase)
                 except Exception:
                     pass
+    phrases_to_keep = filter_positive_phrases(phrases_to_track[::-1][:500])
+    with open('webtext_phrases_filtered.txt', 'w') as file:
+        for phrase in phrases_to_keep:
+            file.write(phrase + '\n')
 
 
 def vader_sentiment_feat(document):
@@ -135,8 +141,10 @@ class SuicideClassifier(object):
 
         print len(neg_docs)
         print len(pos_docs)
-        negcutoff = len(neg_docs) * 3 / 4
-        poscutoff = len(pos_docs) * 3 / 4
+        # negcutoff = len(neg_docs) * 3 / 4
+        # poscutoff = len(pos_docs) * 3 / 4
+        negcutoff = -200
+        poscutoff = -200
 
         train_pos_docs = pos_docs[:poscutoff]
         test_pos_docs = pos_docs[poscutoff:]
